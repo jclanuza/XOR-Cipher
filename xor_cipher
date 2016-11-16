@@ -11,7 +11,7 @@ char c_string[64],xor_string[64];
 
 int main(void)
 {
-	printf("String: ");
+	printf("String:");
 		scanf("%s",c_string);
 	while(strlen(c_string) > 64 )
 	{
@@ -19,8 +19,8 @@ int main(void)
 		printf("String: ");
 			scanf("%s",c_string);
 	}
-	printf("XOR Key (0 - 255): ");
-		scanf("%d",key);
+	printf("XOR Key (0 - 255):");
+		scanf("%d",&key);
 	while(key < 0 || key > 255)
 	{
 		puts("The Max values for the key in this case of implementation is (0 - 255)\n");
@@ -29,10 +29,11 @@ int main(void)
 	}			
 	for(i = 0; i <= strlen(c_string); i++)
 	{
-		xor_string[i] = (char)(c_string[i] ^ (char)key);	
+		xor_string[i] = (char)((int)c_string[i] ^ key);	
 	}	
 	
 	printf("Current String: %s\n",c_string);
 	printf("Ciphered String: %s\n",xor_string);
+	printf("Ciphered String HEX %X\n",xor_string);
 exit(EXIT_SUCCESS); /* only for OS, no valid for Microcontrolers or Microprocessors*/
 }
