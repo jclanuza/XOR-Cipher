@@ -6,11 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int i,key;
-char c_string[64],xor_string[64];
-
 int main(void)
 {
+	int i,key;
+	char c_string[64],xor_string[64];
 	printf("String:");
 		scanf("%s",c_string);
 	while(strlen(c_string) > 64 )
@@ -31,9 +30,12 @@ int main(void)
 	{
 		xor_string[i] = (char)((int)c_string[i] ^ key);	
 	}	
-	
+	puts("");
+	puts("");
+	puts("------------------------------------");
 	printf("Current String: %s\n",c_string);
 	printf("Ciphered String: %s\n",xor_string);
-	printf("Ciphered String HEX %X\n",xor_string);
+	printf("Ciphered String HEX: %X\n",xor_string);
+	puts("------------------------------------");
 exit(EXIT_SUCCESS); /* only for OS, no valid for Microcontrolers or Microprocessors*/
 }
