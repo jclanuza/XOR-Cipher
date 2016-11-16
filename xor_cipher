@@ -11,7 +11,7 @@ int main(void)
 	int i,key;
 	char c_string[64],xor_string[64];
 	printf("String:");
-		scanf("%s",c_string);
+		gets(c_string);
 	while(strlen(c_string) > 64 )
 	{
 		puts("Sorry, the max value is 64 characteres, try again with a more short string");
@@ -33,9 +33,9 @@ int main(void)
 	puts("");
 	puts("");
 	puts("------------------------------------");
-	printf("Current String: %s\n",c_string);
-	printf("Ciphered String: %s\n",xor_string);
-	printf("Ciphered String HEX: %X\n",xor_string);
+	printf("Current String: %s\n\n",c_string);
+	printf("Ciphered String: %s\n\n",xor_string);
+	printf("Ciphered String HEX: %X\n\n",xor_string);
 	puts("------------------------------------");
 exit(EXIT_SUCCESS); /* only for OS, no valid for Microcontrolers or Microprocessors*/
 }
