@@ -1,39 +1,72 @@
-/* A very simple and little example of a XOR Cipher 
-	Juan Carlos Lanuza L. - MGA - 2016
-*/
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
 
-unsigned xorcipher(char *xor_string,unsigned key);
+/* Error codes */
+#define ERR_PWD -1
+#define	ERRF_SF -2
+#define ERRF_DF -3
 
-int main(int argc, char** argv)
+FILE *scr_file, *dst_file;
+char sfile[100],dfile[100];
+static int32_t unencrypted,encrypted;
+static int32_t k[16] = {0xFF};	
+
+static void encryptdecrypt(void);
+static void report(int32_t source_file_bytes, int32_t output_file_bytes, float data_loss);
+
+unsigned int main(void)
 {
-	unsigned key;
-	char c_string[64];
-	
-	printf("String:");
-	gets(c_string);
-	fprintf(stdout,"XOR Key (0 - 255):");
-	scanf("%d",&key);		
-	xorcipher(c_string,key);
-	return 0;
+	fprintf(stdout,"Archivo a Cifrar o Decifrar: "); 
+	gets(sfile);
+	fprintf(stdout,"Archivo de Salida: "); 
+	gets(dfile);
+	encryptdecrypt();
+	system("pause");
+	exit(EXIT_SUCCESS);
 }
 
-unsigned xorcipher(char *c_string,unsigned key)
+static void encryptdecrypt(void)
 {
-	char xor_string[64];
-	for(int i = 0;i <= strlen(c_string);i++)
+	if(k == '\0') 
+	{ 
+		fprintf(stderr,"Es necesaria una clave\n"); 
+		exit(ERR_PWD); 
+	}
+	else
+	if((scr_file = fopen(sfile, "rb")) == NULL ) 
 	{
-		xor_string[i] = (char)((int)c_string[i] ^ key);	
-	}	
-	fprintf(stdout,
-			"\n------------------------------------\n"
-			"Current String: %s\n"
-			"XOR Key: %d\n"
-			"Ciphered String: %s\n"
-			"Ciphered String HEX: %X\n"
-			"------------------------------------\n"
-			,c_string,key,xor_string,xor_string
-			);
-	return 0;	
+		fprintf(stderr,"\n\n%s : Archivo Inexistente o fallo su apertura\n\a",sfile);
+		exit(ERRF_SF);
+	}
+	else
+	if((dst_file = fopen(dfile, "wb")) == NULL)
+	{
+		fprintf(stderr,"\n\n%s : Archivo Inexistente o fallo su apertura\n\a",dfile);
+		exit(ERRF_DF);		
+	}
+	while ((unencrypted = getc(scr_file)) != EOF) 
+	{
+		encrypted = (unencrypted ^ k[0]);
+		encrypted &= k[0];
+		putc(encrypted,dst_file);
+	}
+	/* Determina el tamaño del Archivo */
+	fseek(scr_file, 0L, SEEK_END);
+  	fseek(dst_file, 0L, SEEK_END);
+  	report(ftell(scr_file),ftell(dst_file),(((float)ftell(dst_file) / (float)ftell(scr_file)) * 100));
+	
+	fclose(dst_file);
+	fclose(scr_file);
+}
+
+static void report(int32_t sc_fbytes, int32_t dst_fbytes, float d_loss)
+{
+	fprintf(stdout,"\n\nArchivo Original: %s | Size: %.2f KB\n"
+				   "Archivo Cifrado: %s | Size: %.2f KB\n"
+				   "Perdida durante Cifrado: %.2f %c\n"
+				   "Mecanismo de Cifrado: XOR\n"
+				   "Clave Utilizada: %X\n\n"
+	,sfile,((float)sc_fbytes / 1024),dfile,((float)dst_fbytes / 1024),(d_loss - 100),(char)37,k[0]);
 }
